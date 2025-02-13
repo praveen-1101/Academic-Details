@@ -18,7 +18,6 @@ const mongoose = require('mongoose');
 
 const RatingSchema = new mongoose.Schema({
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject', required: true },
-    studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     rating: {type:Number,required:true, min:1, max:4}
 });
 
