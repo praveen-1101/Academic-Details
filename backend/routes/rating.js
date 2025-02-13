@@ -32,7 +32,7 @@ router.get("/average-rating/:subjectId", async (req, res) => {
 module.exports = router; */
 
 
-router.get("/average-rating/:subjectId", async (req, res) => {
+router.get("/average/:subjectId", async (req, res) => {
     try {
         const { subjectId } = req.params;
 
@@ -45,7 +45,8 @@ router.get("/average-rating/:subjectId", async (req, res) => {
 
         res.json({
             subjectId: subjectId,
-            averageRating: subject.averageRating || 0,
+            subject: subject.name,
+            averageRating: subject.averageRating.toFixed(2) || 0,
         });
     } catch (error) {
         console.error(error);

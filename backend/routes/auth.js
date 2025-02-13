@@ -23,10 +23,7 @@ router.post('/login', async (req, res) => {
 module.exports = router;
  */
 
-
-
 const express = require('express');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const generateTokens = require('../utils/generateTokens');
@@ -46,9 +43,8 @@ router.post('/login', async (req, res) => {
         });
     }
 
-    // Validate password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
+    // Direct password comparison (no bcrypt)
+    if (user.password !== password) {
         return res.status(400).json({
             message: 'Login unsuccessful: Incorrect password',
             success: false
