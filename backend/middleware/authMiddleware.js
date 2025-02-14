@@ -10,16 +10,15 @@ const authMiddleware = async (req, res, next) => {
             return res.status(401).json({ message: "Access Denied. No token provided.", success: false });
         }
 
-        // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById(decoded.userId).select("-password"); // Exclude password
+        const user = await User.findById(decoded.userId).select("-password"); 
 
         if (!user) {
             return res.status(401).json({ message: "Invalid token. User not found.", success: false });
         }
 
-        req.user = user; // Attach user details to request
-        next(); // Proceed to next middleware or route
+        req.user = user; 
+        next(); 
 
     } catch (error) {
         return res.status(401).json({ message: "Invalid or expired token.", success: false });

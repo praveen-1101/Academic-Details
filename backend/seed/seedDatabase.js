@@ -7,18 +7,18 @@ const connectDB = require('../config/db');
 
 const seedDatabase = async () => {
     await connectDB();
-    try {
-        // Clear existing data
+    try 
+    {
         await User.deleteMany();
         await Subject.deleteMany();
 
-        // Generate 50 students
         const users = [];
+
         for (let i = 1; i <= 65; i++) {
             const rollNumber = `22L31A05${i.toString().padStart(2, '0')}`;
             users.push({
                 username: rollNumber,
-                password: rollNumber,  // Password same as username
+                password: rollNumber, 
                 name: `Student ${i}`
             });
         }
@@ -26,17 +26,14 @@ const seedDatabase = async () => {
             const rollNumber = `23L35A05${i.toString().padStart(2, '0')}`;
             users.push({
                 username: rollNumber,
-                password: rollNumber,  // Password same as username
+                password: rollNumber, 
                 name: `Student ${i + 65}`
             });
         }
         await User.insertMany(users);
         console.log('Students seeded successfully.');
 
-        // Predefined subjects
         const subjects = [
-            // CSE Subjects
-            
             { name: "CNS", branch: "CSE", semester: 2, year: 3, type: "Theory" },
             { name: "ML", branch: "CSE", semester: 2, year: 3, type: "Theory" },
             { name: "MEFA", branch: "CSE", semester: 2, year: 3, type: "Theory" },

@@ -1,40 +1,19 @@
-/* const express = require('express');
-const Subject = require('../models/Subject');
-
-const router = express.Router();
-
-// Get subjects based on branch & semester
-router.get('/', async (req, res) => {
-    const { branch, semester } = req.query;
-
-    const subjects = await Subject.find({ branch, semester });
-    res.json(subjects);
-});
-
-module.exports = router;
- */
-
-
 const express = require("express");
 const router = express.Router();
 const Subject = require("../models/Subject");
 
-// Fetch subjects based on branch, semester, and B.Tech year
 router.get("/", async (req, res) => {
     try {
         const { branch, semester, year } = req.query;
 
-        // Allowed values for validation
         const validBranches = ["CSE", "ECE", "EEE", "IT", "MECH", "CIVIL", "ECM"];
         const validSemesters = [1, 2 ];
         const validYears = [1, 2, 3, 4];
 
-        // Validation for required parameters
         if (!branch || !semester || !year) {
             return res.status(400).json({ error: "Branch, semester, and B.Tech year are required" });
         }
 
-        // Validate branch, semester, and B.Tech year
         if (!validBranches.includes(branch.toUpperCase())) {
             return res.status(400).json({ error: "Invalid branch" });
         }
@@ -45,7 +24,6 @@ router.get("/", async (req, res) => {
             return res.status(400).json({ error: "Invalid B.Tech year" });
         }
 
-        // Fetch subjects based on criteria
         const subjects = await Subject.find({ branch, semester, year });
 
         res.status(200).json(subjects);
