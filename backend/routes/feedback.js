@@ -72,7 +72,7 @@ const Rating = require("../models/Rating");
 
 router.post("/rating", async (req, res) => {
     try {
-        const { ratings, branch } = req.body;  // Accept branch from the request
+        const { ratings, branch } = req.body;  
 
         if (!branch || !["CSE1", "CSE2", "CSE3", "CSE4"].includes(branch)) {
             return res.status(400).json({ error: "Invalid or missing branch" });

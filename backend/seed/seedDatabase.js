@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const Subject = require('../models/Subject');
 require('dotenv').config();
@@ -14,20 +12,42 @@ const seedDatabase = async () => {
 
         const users = [];
 
-        for (let i = 1; i <= 65; i++) {
+        /* for (let i = 1; i <= 65; i++) {
             const rollNumber = `22L31A05${i.toString().padStart(2, '0')}`;
             users.push({
                 username: rollNumber,
                 password: rollNumber, 
                 name: `Student ${i}`
             });
-        }
-        for (let i = 1; i <= 11; i++) {
+        } */
+           
+            let rollNumberBase = "22L31A05";
+
+            for (let i = 1; i <= 253; i++) {
+                let suffix;
+                
+                if (i < 100) {
+                    suffix = i.toString().padStart(2, '0'); // 00 to 99
+                } else {
+                    const letter = String.fromCharCode(65 + Math.floor((i - 100) / 10)); // A, B, C...
+                    const digit = (i - 100) % 10; // 0-9
+                    suffix = `${letter}${digit}`; // A0, A1, A2...Z9
+                }
+    
+                const rollNumber = rollNumberBase + suffix;
+                users.push({
+                    username: rollNumber,
+                    password: rollNumber, 
+                    name: `Student ${users.length + 1}`
+                });
+            }
+
+        for (let i = 1; i <= 47; i++) {
             const rollNumber = `23L35A05${i.toString().padStart(2, '0')}`;
             users.push({
                 username: rollNumber,
                 password: rollNumber, 
-                name: `Student ${i + 65}`
+                name: `Student ${users.length + 65}`
             });
         }
         await User.insertMany(users);
