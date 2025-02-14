@@ -111,9 +111,14 @@ router.post("/rating", async (req, res) => {
             updateOne: {
                 filter: { _id: subjectId, branch },
                 update: {
-                    totalRatings: subjectUpdates[subjectId].totalRatings,
+                    /* totalRatings: subjectUpdates[subjectId].totalRatings,
                     sumOfRatings: subjectUpdates[subjectId].sumOfRatings,
-                    averageRating: subjectUpdates[subjectId].sumOfRatings / subjectUpdates[subjectId].totalRatings
+                    averageRating: subjectUpdates[subjectId].sumOfRatings / subjectUpdates[subjectId].totalRatings */
+                    $set: {  // ✅ Ensure update works correctly
+                        totalRatings: subjectUpdates[subjectId].totalRatings,
+                        sumOfRatings: subjectUpdates[subjectId].sumOfRatings,
+                        averageRating: subjectUpdates[subjectId].sumOfRatings / subjectUpdates[subjectId].totalRatings
+                    }
                 }
             }
         }));
