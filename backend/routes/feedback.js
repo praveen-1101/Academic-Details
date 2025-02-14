@@ -6,6 +6,7 @@ const Rating = require("../models/Rating");
 
 router.post("/rating", async (req, res) => {
     try {
+        
         const { ratings } = req.body; 
 
         if (!Array.isArray(ratings) || ratings.length === 0) {

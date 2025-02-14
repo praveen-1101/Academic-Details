@@ -14,11 +14,20 @@ const seedDatabase = async () => {
 
         // Generate 50 students
         const users = [];
-        for (let i = 1; i <= 50; i++) {
+        for (let i = 1; i <= 65; i++) {
+            const rollNumber = `22L31A05${i.toString().padStart(2, '0')}`;
             users.push({
-                username: `student${i}`,
-                password: `password${i}`,
+                username: rollNumber,
+                password: rollNumber,  // Password same as username
                 name: `Student ${i}`
+            });
+        }
+        for (let i = 1; i <= 11; i++) {
+            const rollNumber = `23L35A05${i.toString().padStart(2, '0')}`;
+            users.push({
+                username: rollNumber,
+                password: rollNumber,  // Password same as username
+                name: `Student ${i + 65}`
             });
         }
         await User.insertMany(users);
@@ -28,83 +37,27 @@ const seedDatabase = async () => {
         const subjects = [
             // CSE Subjects
             
-            { name: 'Mathematics', branch: 'CSE', semester: 1, year: 1, type: 'Theory' },
-            { name: 'Physics', branch: 'CSE', semester: 1, year: 1, type: 'Theory' },
-            { name: 'Programming in C', branch: 'CSE', semester: 1, year: 1, type: 'Practical' },
-            { name: 'Data Structures', branch: 'CSE', semester: 2, year: 1, type: 'Theory' },
-            { name: 'OOPS with Java', branch: 'CSE', semester: 2, year: 1, type: 'Practical' },
-            { name: 'DBMS', branch: 'CSE', semester: 1, year: 2, type: 'Theory' },
-            { name: 'Operating Systems', branch: 'CSE', semester: 1, year: 2, type: 'Theory' },
-            { name: 'Computer Networks', branch: 'CSE', semester: 2, year: 2, type: 'Theory' },
-            { name: 'Web Technologies', branch: 'CSE', semester: 2, year: 2, type: 'Practical' },
-            { name: 'Machine Learning', branch: 'CSE', semester: 1, year: 3, type: 'Theory' },
-            { name: 'Software Engineering', branch: 'CSE', semester: 1, year: 3, type: 'Theory' },
-            { name: 'Cloud Computing', branch: 'CSE', semester: 2, year: 3, type: 'Theory' },
-            { name: 'Artificial Intelligence', branch: 'CSE', semester: 2, year: 3, type: 'Theory' },
-            { name: 'Cyber Security', branch: 'CSE', semester: 1, year: 4, type: 'Theory' },
-            { name: 'Internet of Things', branch: 'CSE', semester: 1, year: 4, type: 'Theory' },
-            { name: 'Big Data Analytics', branch: 'CSE', semester: 2, year: 4, type: 'Theory' },
-            { name: 'Final Year Project', branch: 'CSE', semester: 2, year: 4, type: 'Practical' },
-            // ECE Subjects
-            { name: 'Mathematics', branch: 'ECE', semester: 1, year: 1, type: 'Theory' },
-            { name: 'Physics', branch: 'ECE', semester: 1, year: 1, type: 'Theory' },
-            { name: 'Basic Electronics', branch: 'ECE', semester: 1, year: 1, type: 'Theory' },
-            { name: 'Circuit Theory', branch: 'ECE', semester: 2, year: 1, type: 'Theory' },
-            { name: 'Analog Electronics', branch: 'ECE', semester: 2, year: 1, type: 'Theory' },
-            { name: 'Digital Electronics', branch: 'ECE', semester: 1, year: 2, type: 'Theory' },
-            { name: 'Microprocessors', branch: 'ECE', semester: 1, year: 2, type: 'Theory' },
-            { name: 'Signals & Systems', branch: 'ECE', semester: 2, year: 2, type: 'Theory' },
-            { name: 'Communication Systems', branch: 'ECE', semester: 2, year: 2, type: 'Theory' },
-            { name: 'VLSI Design', branch: 'ECE', semester: 1, year: 3, type: 'Theory' },
-            { name: 'Embedded Systems', branch: 'ECE', semester: 1, year: 3, type: 'Theory' },
-            { name: 'Antenna Theory', branch: 'ECE', semester: 2, year: 3, type: 'Theory' },
-            { name: 'Internet of Things', branch: 'ECE', semester: 2, year: 3, type: 'Theory' },
-            { name: 'Wireless Communication', branch: 'ECE', semester: 1, year: 4, type: 'Theory' },
-            { name: 'AI in Electronics', branch: 'ECE', semester: 1, year: 4, type: 'Theory' },
-            { name: 'Robotics', branch: 'ECE', semester: 2, year: 4, type: 'Theory' },
-            { name: 'Final Year Project', branch: 'ECE', semester: 2, year: 4, type: 'Practical' },
-        
-            // EEE Subjects
-            { name: 'Mathematics', branch: 'EEE', semester: 1, year: 1, type: 'Theory' },
-    { name: 'Physics', branch: 'EEE', semester: 1, year: 1, type: 'Theory' },
-    { name: 'Electrical Circuits', branch: 'EEE', semester: 2, year: 1, type: 'Theory' },
-    { name: 'Digital Logic Design', branch: 'EEE', semester: 2, year: 1, type: 'Theory' },
-    { name: 'Power Systems', branch: 'EEE', semester: 1, year: 2, type: 'Theory' },
-    { name: 'Electrical Machines', branch: 'EEE', semester: 1, year: 2, type: 'Theory' },
-    { name: 'Control Systems', branch: 'EEE', semester: 2, year: 2, type: 'Theory' },
-    { name: 'Power Electronics', branch: 'EEE', semester: 2, year: 2, type: 'Theory' },
-    { name: 'Renewable Energy', branch: 'EEE', semester: 1, year: 3, type: 'Theory' },
-    { name: 'Microcontrollers', branch: 'EEE', semester: 1, year: 3, type: 'Theory' },
-    { name: 'High Voltage Engineering', branch: 'EEE', semester: 2, year: 3, type: 'Theory' },
-    { name: 'Energy Management', branch: 'EEE', semester: 2, year: 3, type: 'Theory' },
-    { name: 'Electric Vehicles', branch: 'EEE', semester: 1, year: 4, type: 'Theory' },
-    { name: 'Smart Grid Technology', branch: 'EEE', semester: 1, year: 4, type: 'Theory' },
-    { name: 'Electrical Safety', branch: 'EEE', semester: 2, year: 4, type: 'Theory' },
-    { name: 'Final Year Project', branch: 'EEE', semester: 2, year: 4, type: 'Practical' },
-        
-            // MECH Subjects
-            { name: 'Mathematics', branch: 'MECH', semester: 1, year: 1, type: 'Theory' },
-            { name: 'Physics', branch: 'MECH', semester: 1, year: 1, type: 'Theory' },
-            { name: 'Engineering Drawing', branch: 'MECH', semester: 2, year: 1, type: 'Practical' },
-            { name: 'Thermodynamics', branch: 'MECH', semester: 2, year: 1, type: 'Theory' },
-            { name: 'Fluid Mechanics', branch: 'MECH', semester: 1, year: 2, type: 'Theory' },
-            { name: 'Manufacturing Processes', branch: 'MECH', semester: 1, year: 2, type: 'Theory' },
-            { name: 'Material Science', branch: 'MECH', semester: 2, year: 2, type: 'Theory' },
-            { name: 'Automobile Engineering', branch: 'MECH', semester: 1, year: 3, type: 'Theory' },
-            { name: 'CAD/CAM', branch: 'MECH', semester: 2, year: 3, type: 'Practical' },
-            { name: 'Robotics', branch: 'MECH', semester: 1, year: 4, type: 'Theory' },
-        
-            // CIVIL Subjects
-            { name: 'Mathematics', branch: 'CIVIL', semester: 1, year: 1, type: 'Theory' },
-            { name: 'Physics', branch: 'CIVIL', semester: 1, year: 1, type: 'Theory' },
-            { name: 'Surveying', branch: 'CIVIL', semester: 2, year: 1, type: 'Practical' },
-            { name: 'Structural Analysis', branch: 'CIVIL', semester: 1, year: 2, type: 'Theory' },
-            { name: 'Transportation Engineering', branch: 'CIVIL', semester: 2, year: 2, type: 'Theory' },
-            { name: 'Environmental Engineering', branch: 'CIVIL', semester: 1, year: 3, type: 'Theory' },
-            { name: 'Geotechnical Engineering', branch: 'CIVIL', semester: 2, year: 3, type: 'Theory' },
-            { name: 'Construction Management', branch: 'CIVIL', semester: 1, year: 4, type: 'Theory' },
-            { name: 'Smart City Design', branch: 'CIVIL', semester: 2, year: 4, type: 'Theory' },
-            { name: 'Final Year Project', branch: 'CIVIL', semester: 2, year: 4, type: 'Practical' }
+            { name: "CNS", branch: "CSE", semester: 2, year: 3, type: "Theory" },
+            { name: "ML", branch: "CSE", semester: 2, year: 3, type: "Theory" },
+            { name: "MEFA", branch: "CSE", semester: 2, year: 3, type: "Theory" },
+            { name: "UNIX", branch: "CSE", semester: 2, year: 3, type: "Theory" },
+            { name: "AI", branch: "CSE", semester: 2, year: 3, type: "Theory" },
+            { name: "ML LAB", branch: "CSE", semester: 2, year: 3, type: "Practical" },
+            { name: "OOAD LAB", branch: "CSE", semester: 2, year: 3, type: "Practical" },
+            { name: "GIT HUB", branch: "CSE", semester: 2, year: 3, type: "Theory" },
+            { name: "WT", branch: "CSE", semester: 2, year: 3, type: "Practical" },
+            { name: "OTHERS", branch: "CSE", semester: 2, year: 3, type: "Theory" },
+            { name: "LCS", branch: "CSE", semester: 2, year: 3, type: "Theory" },
+            { name: "IA/V SKILL", branch: "CSE", semester: 2, year: 3, type: "Theory" },
+            { name: "WTR", branch: "CSE", semester: 2, year: 3, type: "Theory" },
+            { name: "CRT", branch: "CSE", semester: 2, year: 3, type: "Theory" },
+            { name: "FCA", branch: "CSE", semester: 1, year: 3, type: "Theory" },
+            { name: "DWDM", branch: "CSE", semester: 1, year: 3, type: "Theory" },
+            { name: "CCNA", branch: "CSE", semester: 1, year: 3, type: "Theory" },
+            { name: "ADS", branch: "CSE", semester: 1, year: 3, type: "Theory" },
+            { name: "CN", branch: "CSE", semester: 1, year: 3, type: "Theory" },
+            { name: "DAA LAB", branch: "CSE", semester: 1, year: 3, type: "Practical" },
+            { name: "CN LAB", branch: "CSE", semester: 1, year: 3, type: "Practical" }
         ];
         
         await Subject.insertMany(subjects);
