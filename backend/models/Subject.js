@@ -97,7 +97,8 @@ const SubjectSchema = new mongoose.Schema({
     { 
         type: String,
         enum: ["Theory", "Practical"] 
-    } 
+    } ,
+    messages: { type: [String], default: [] }
 });
 
 module.exports = mongoose.model("Subject", SubjectSchema);
