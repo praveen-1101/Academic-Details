@@ -35,6 +35,10 @@ const RatingSchema = new mongoose.Schema({
         min: 1, 
         max: 4
     },
+    branch: { 
+        type: String,
+        required: true
+    },
     message: {
         type: String,
         required: true,
