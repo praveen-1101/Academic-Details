@@ -11,15 +11,6 @@ const seedDatabase = async () => {
         await Subject.deleteMany();
 
         const users = [];
-
-        /* for (let i = 1; i <= 65; i++) {
-            const rollNumber = `22L31A05${i.toString().padStart(2, '0')}`;
-            users.push({
-                username: rollNumber,
-                password: rollNumber, 
-                name: `Student ${i}`
-            });
-        } */
            
             let rollNumberBase = "22L31A05";
 
@@ -27,11 +18,11 @@ const seedDatabase = async () => {
                 let suffix;
                 
                 if (i < 100) {
-                    suffix = i.toString().padStart(2, '0'); // 00 to 99
+                    suffix = i.toString().padStart(2, '0'); 
                 } else {
                     const letter = String.fromCharCode(65 + Math.floor((i - 100) / 10)); // A, B, C...
-                    const digit = (i - 100) % 10; // 0-9
-                    suffix = `${letter}${digit}`; // A0, A1, A2...Z9
+                    const digit = (i - 100) % 10; 
+                    suffix = `${letter}${digit}`; 
                 }
     
                 const rollNumber = rollNumberBase + suffix;
