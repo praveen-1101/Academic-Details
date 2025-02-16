@@ -84,7 +84,7 @@ router.post("/rating", async (req, res) => {
 
         let ratingDocs = [];
         let subjectUpdates = {};
-
+         hi
         for (const { subjectId, rating } of ratings) {
             const subject = await Subject.findOne({ _id: subjectId, branch });
 
