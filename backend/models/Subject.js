@@ -44,6 +44,10 @@ const SubjectSchema = new mongoose.Schema({
         type: String,
         enum: ["Theory", "Practical"] 
     } ,
+    faculty: 
+    {
+        type:String,
+    },
     messages: { type: [String], default: [] }
 });
 
