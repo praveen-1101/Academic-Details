@@ -18,16 +18,16 @@ let apiEnabled = true;
 
 app.use((req, res, next) => {
     if (!apiEnabled && req.path !== "/api/toggle") {
-        return res.status(503).json({ message: "Server is under maintenance" });
+        return res.status(503).json({ message: "Server is under maintenance." });
     }
     next();
 });
 
-app.get('/', (req, res) => res.send('API is running...'));
+app.get('/', (req, res) => res.send('Server working as expected...'));
 
 app.post('/api/toggle', (req, res) => {
     apiEnabled = !apiEnabled;
-    res.json({ message: `Server ${apiEnabled ? "is available now" : "is under maintenance"}` });
+    res.json({ message: `Server ${apiEnabled ? "is live now." : "is under maintenance."}` });
 });
 
 app.use('/api/auth', authRoutes);
