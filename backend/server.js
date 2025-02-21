@@ -14,7 +14,21 @@ app.use(cors());
 
 connectDB();
 
+let apiEnabled = true;
+
+app.use((req, res, next) => {
+    if (!apiEnabled && req.path !== "/api/toggle") {
+        return res.status(503).json({ message: "API is currently disabled" });
+    }
+    next();
+});
+
 app.get('/', (req, res) => res.send('API is running...'));
+
+app.post('/api/toggle', (req, res) => {
+    apiEnabled = !apiEnabled;
+    res.json({ message: `API status set to ${apiEnabled ? "enabled" : "disabled"}` });
+});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/subjects', subjectRoutes);
