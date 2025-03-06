@@ -1,6 +1,57 @@
 const express = require("express");
 const router = express.Router();
 const Subject = require("../models/Subject");
+
+router.get("/average", async (req, res) => {
+    try {
+        const { branch, year, semester } = req.query;
+
+        const validBranches = ["CSE1", "CSE2", "CSE3", "CSE4"];
+        if (!branch || !validBranches.includes(branch)) {
+            return res.status(400).json({ message: "Invalid or missing branch" });
+        }
+        if (!year || !semester) {
+            return res.status(400).json({ message: "Year and semester are required" });
+        }
+
+        // Find all subjects for the given year, branch, and semester
+        const subjects = await Subject.find({ year, branch, semester });
+
+        if (!subjects.length) {
+            return res.status(404).json({ message: `No subjects found for branch ${branch}, year ${year}, and semester ${semester}` });
+        }
+
+        // Prepare response
+        const results = subjects.map(subject => ({
+            subjectId: subject._id,
+            subject: subject.name,
+            facultyName: subject.faculty || "Unknown",
+            branch: subject.branch,
+            year: subject.year,
+            semester: subject.semester,
+            type: subject.type || "Unknown",
+            averageRating: subject.averageRating.toFixed(2) || "0.00",
+            totalRatings: subject.totalRatings,
+            sumOfRatings: subject.sumOfRatings,
+            feedback: subject.messages // Directly using messages from SubjectSchema
+        }));
+
+        res.json(results);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+module.exports = router;
+
+
+
+
+
+/* const express = require("express");
+const router = express.Router();
+const Subject = require("../models/Subject");
 const Rating = require("../models/Rating");
 
 router.get("/average/:subjectId", async (req, res) => {
@@ -35,7 +86,7 @@ router.get("/average/:subjectId", async (req, res) => {
     }
 });
 
-module.exports = router;
+module.exports = router; */
 
 
 
