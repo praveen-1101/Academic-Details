@@ -1,40 +1,51 @@
 const express = require("express");
 const router = express.Router();
 const Subject = require("../models/Subject");
+const Rating = require("../models/Rating");
 
+// GET Route to fetch rating reviews by year, semester, and branch
 router.get("/average", async (req, res) => {
     try {
-        const { branch, year, semester } = req.query;
+        const { year, semester, branch } = req.query;
 
-        const validBranches = ["CSE1", "CSE2", "CSE3", "CSE4"];
-        if (!branch || !validBranches.includes(branch)) {
-            return res.status(400).json({ message: "Invalid or missing branch" });
-        }
-        if (!year || !semester) {
-            return res.status(400).json({ message: "Year and semester are required" });
+        if (!year || !semester || !branch) {
+            return res.status(400).json({ message: "Year, semester, and branch are required" });
         }
 
-        // Find all subjects for the given year, branch, and semester
-        const subjects = await Subject.find({ year, branch, semester });
+        // Fetch all subjects for the given year, semester, and branch
+        const subjects = await Subject.find({ year, semester, branch });
 
-        if (!subjects.length) {
-            return res.status(404).json({ message: `No subjects found for branch ${branch}, year ${year}, and semester ${semester}` });
+        if (subjects.length === 0) {
+            return res.status(404).json({ message: "No subjects found for the given filters" });
         }
 
-        // Prepare response
-        const results = subjects.map(subject => ({
-            subjectId: subject._id,
-            subject: subject.name,
-            facultyName: subject.faculty || "Unknown",
-            branch: subject.branch,
-            year: subject.year,
-            semester: subject.semester,
-            type: subject.type || "Unknown",
-            averageRating: subject.averageRating.toFixed(2) || "0.00",
-            totalRatings: subject.totalRatings,
-            sumOfRatings: subject.sumOfRatings,
-            feedback: subject.messages // Directly using messages from SubjectSchema
-        }));
+        const subjectIds = subjects.map(subject => subject._id);
+        
+        // Fetch all ratings related to the subjects
+        const ratings = await Rating.find({ subjectId: { $in: subjectIds }, branch });
+
+        // Prepare output for each subject
+        const results = subjects.map(subject => {
+            const subjectRatings = ratings.filter(rating => rating.subjectId.toString() === subject._id.toString());
+
+            // Count ratings (4, 3, 2, 1)
+            const ratingCounts = { 4: 0, 3: 0, 2: 0, 1: 0 };
+            const feedbacks = [];
+
+            subjectRatings.forEach(rating => {
+                ratingCounts[rating.rating] += 1;
+                feedbacks.push(rating.message);
+            });
+
+            return {
+                subjectId: subject._id,
+                subjectName: subject.name,
+                facultyName: subject.faculty || "Unknown",
+                averageRating: subject.averageRating.toFixed(2),
+                ratingCounts,
+                feedback: feedbacks
+            };
+        });
 
         res.json(results);
     } catch (error) {
@@ -44,9 +55,6 @@ router.get("/average", async (req, res) => {
 });
 
 module.exports = router;
-
-
-
 
 
 /* const express = require("express");
