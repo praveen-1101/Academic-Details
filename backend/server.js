@@ -5,6 +5,8 @@ const subjectRoutes = require('./routes/subjects');
 const feedbackRoutes = require('./routes/feedback');
 const ratingRoutes = require('./routes/rating');  
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 
 require('dotenv').config();
 
@@ -14,7 +16,9 @@ app.use(cors());
 
 connectDB();
 
-let apiEnabled = true;
+
+const envFilePath = path.join(__dirname, '.env');
+let apiEnabled = process.env.API_ENABLED === "true";
 
 app.use((req, res, next) => {
     if (!apiEnabled && req.path !== "/api/toggle") {
@@ -27,6 +31,13 @@ app.get('/', (req, res) => res.send('Server working as expected...'));
 
 app.post('/api/toggle', (req, res) => {
     apiEnabled = !apiEnabled;
+    let envContent = fs.readFileSync(envFilePath, 'utf8');
+    if (envContent.includes("API_ENABLED=")) {
+        envContent = envContent.replace(/API_ENABLED=.*/, `API_ENABLED=${apiEnabled}`);
+    } else {
+        envContent += `\nAPI_ENABLED=${apiEnabled}`;
+    }
+    fs.writeFileSync(envFilePath, envContent);
     res.json({ message: `Server ${apiEnabled ? "is live now." : "is under maintenance."}` });
 });
 

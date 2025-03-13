@@ -3,7 +3,6 @@ const router = express.Router();
 const Subject = require("../models/Subject");
 const Rating = require("../models/Rating");
 
-// GET Route to fetch rating reviews by year, semester, and branch
 router.get("/average", async (req, res) => {
     try {
         const { year, semester, branch } = req.query;
@@ -12,7 +11,6 @@ router.get("/average", async (req, res) => {
             return res.status(400).json({ message: "Year, semester, and branch are required" });
         }
 
-        // Fetch all subjects for the given year, semester, and branch
         const subjects = await Subject.find({ year, semester, branch });
 
         if (subjects.length === 0) {
@@ -21,14 +19,11 @@ router.get("/average", async (req, res) => {
 
         const subjectIds = subjects.map(subject => subject._id);
         
-        // Fetch all ratings related to the subjects
         const ratings = await Rating.find({ subjectId: { $in: subjectIds }, branch });
 
-        // Prepare output for each subject
         const results = subjects.map(subject => {
             const subjectRatings = ratings.filter(rating => rating.subjectId.toString() === subject._id.toString());
 
-            // Count ratings (4, 3, 2, 1)
             const ratingCounts = { 4: 0, 3: 0, 2: 0, 1: 0 };
             const feedbacks = [];
 
