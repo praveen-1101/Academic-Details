@@ -18,16 +18,18 @@ router.post("/rating", async (req, res) => {
         let ratingDocs = [];
         let subjectUpdates = {};
 
-        for (const { subjectId, rating, message } of ratings) {
+        for (const { subjectName, rating, message } of ratings) {
             if (!message || typeof message !== "string") {
                 return res.status(400).json({ error: "Message is required and must be a string" });
             }
 
-            const subject = await Subject.findOne({ _id: subjectId, branch });
+            const subject = await Subject.findOne({ name: subjectName, branch });
 
             if (!subject) {
-                return res.status(404).json({ error: `Subject with ID ${subjectId} not found for branch ${branch}` });
+                return res.status(404).json({ error: `Subject ${subjectName} not found for branch ${branch}` });
             }
+     
+            const subjectId = subject._id;
 
             ratingDocs.push({ subjectId, branch, rating, message });
 
@@ -35,7 +37,7 @@ router.post("/rating", async (req, res) => {
                 subjectUpdates[subjectId] = { 
                     totalRatings: subject.totalRatings, 
                     sumOfRatings: subject.sumOfRatings,
-                    messages: [...subject.messages] // Keep existing messages
+                    messages: [...subject.messages]
                 };
             }
 
