@@ -25,10 +25,11 @@ router.post("/rating", async (req, res) => {
 
         const subjectNames = ratings.map(r => r.subjectName);
         
-        const subjects = await Subject.find({ name: { $in: subjectNames }, branch, year, semester });
-
+        let subjects = await Subject.find({ name: { $in: subjectNames }, branch, year, semester });
+        
         const subjectMap = new Map(subjects.map(sub => [sub.name, sub]));
 
+        let newSubjects = [];
         let ratingDocs = [];
         let subjectUpdates = {};
 
@@ -37,20 +38,23 @@ router.post("/rating", async (req, res) => {
                 return res.status(400).json({ error: "Message is required and must be a string." });
             }
 
-            const subject = subjectMap.get(subjectName);
+            let subject = subjectMap.get(subjectName);
+            
             if (!subject) {
-                return res.status(404).json({ error: `Subject ${subjectName} not found for branch ${branch}, year ${year}, and semester ${semester}` });
+                subject = new Subject({ name: subjectName, branch, year, semester, totalRatings: 0, sumOfRatings: 0, messages: [] });
+                newSubjects.push(subject);
+                subjectMap.set(subjectName, subject);
             }
 
             const subjectId = subject._id;
 
-            ratingDocs.push({ subjectId, branch, year, semester, rating, message });
+            ratingDocs.push({ subjectId, subjectName, branch, year, semester, rating, message });
 
             if (!subjectUpdates[subjectId]) {
                 subjectUpdates[subjectId] = {
                     totalRatings: subject.totalRatings,
                     sumOfRatings: subject.sumOfRatings,
-                    messages: [...subject.messages]
+                    messages: subject.messages
                 };
             }
 
@@ -59,10 +63,13 @@ router.post("/rating", async (req, res) => {
             subjectUpdates[subjectId].messages.push(message);
         }
 
-        // Insert new ratings
+        if (newSubjects.length > 0) {
+            const insertedSubjects = await Subject.insertMany(newSubjects);
+            insertedSubjects.forEach(sub => subjectMap.set(sub.name, sub));
+        }
+
         await Rating.insertMany(ratingDocs);
 
-        // Prepare bulk update operations
         const bulkOperations = Object.keys(subjectUpdates).map(subjectId => ({
             updateOne: {
                 filter: { _id: subjectId },
@@ -81,7 +88,18 @@ router.post("/rating", async (req, res) => {
             await Subject.bulkWrite(bulkOperations);
         }
 
-        res.status(201).json({ message: "Ratings submitted successfully", ratings: ratingDocs });
+        res.status(201).json({ 
+            message: "Ratings submitted successfully", 
+            ratings: ratingDocs.map(doc => ({
+                subjectId: doc.subjectId,
+                subjectName: doc.subjectName,
+                branch: doc.branch,
+                year: doc.year,
+                semester: doc.semester,
+                rating: doc.rating,
+                message: doc.message
+            }))
+        });
 
     } catch (error) {
         console.error(error);
