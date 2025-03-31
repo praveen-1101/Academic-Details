@@ -5,10 +5,14 @@ const Rating = require("../models/Rating");
 
 router.post("/rating", async (req, res) => {
     try {
-        const { ratings, branch } = req.body;  
+        const { ratings, branch, year } = req.body;
 
         if (!branch || !["CSE1", "CSE2", "CSE3", "CSE4"].includes(branch)) {
             return res.status(400).json({ error: "Invalid or missing branch" });
+        }
+
+        if (!year || ![1, 2, 3, 4].includes(year)) {
+            return res.status(400).json({ error: "Invalid or missing year" });
         }
 
         if (!Array.isArray(ratings) || ratings.length === 0) {
@@ -23,15 +27,15 @@ router.post("/rating", async (req, res) => {
                 return res.status(400).json({ error: "Message is required and must be a string" });
             }
 
-            const subject = await Subject.findOne({ name: subjectName, branch });
+            const subject = await Subject.findOne({ name: subjectName, branch, year });
 
             if (!subject) {
-                return res.status(404).json({ error: `Subject ${subjectName} not found for branch ${branch}` });
+                return res.status(404).json({ error: `Subject ${subjectName} not found for branch ${branch} and year ${year}` });
             }
      
             const subjectId = subject._id;
 
-            ratingDocs.push({ subjectId, branch, rating, message });
+            ratingDocs.push({ subjectId, branch, year, rating, message });
 
             if (!subjectUpdates[subjectId]) {
                 subjectUpdates[subjectId] = { 
@@ -50,7 +54,7 @@ router.post("/rating", async (req, res) => {
 
         const bulkOperations = Object.keys(subjectUpdates).map(subjectId => ({
             updateOne: {
-                filter: { _id: subjectId, branch },
+                filter: { _id: subjectId, branch, year },
                 update: {
                     $set: {
                         totalRatings: subjectUpdates[subjectId].totalRatings,
@@ -74,4 +78,5 @@ router.post("/rating", async (req, res) => {
 });
 
 module.exports = router;
+
 
