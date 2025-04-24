@@ -3,7 +3,8 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const subjectRoutes = require('./routes/subjects');
 const feedbackRoutes = require('./routes/feedback');
-const ratingRoutes = require('./routes/rating');  
+const ratingRoutes = require('./routes/rating'); 
+const resetRatings = require('./routes/resetRatings');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
@@ -42,6 +43,7 @@ app.post('/api/toggle', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/resetRatings', resetRatings);
 app.use('/api/subjects', subjectRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/ratings', ratingRoutes);
